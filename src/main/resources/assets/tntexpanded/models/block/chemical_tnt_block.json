@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "down": "tntexpanded:block/base2_bottom",
+    "up": "tntexpanded:block/chemical_top",
+    "north": "tntexpanded:block/chemical_sides",
+    "south": "tntexpanded:block/chemical_sides",
+    "west": "tntexpanded:block/chemical_sides",
+    "east": "tntexpanded:block/chemical_sides",
+    "all": "tntexpanded:block/chemical_sides"
+  }
+}

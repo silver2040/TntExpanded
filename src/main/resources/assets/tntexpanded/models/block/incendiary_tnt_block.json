@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "down": "tntexpanded:block/base1_tnt_block_bottom",
+    "up": "tntexpanded:block/incendiary_tnt_block_top",
+    "north": "tntexpanded:block/incendiary_tnt_block_front",
+    "south": "tntexpanded:block/incendiary_tnt_block_sides",
+    "west": "tntexpanded:block/incendiary_tnt_block_sides",
+    "east": "tntexpanded:block/incendiary_tnt_block_sides",
+    "all": "tntexpanded:block/incendiary_tnt_block_sides"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "block.tntexpanded.compact_tnt_block": "Compact Explosive",
+  "block.tntexpanded.toxic_tnt_block": "Toxic Explosive",
+  "block.tntexpanded.incendiary_tnt_block": "Incendiary Explosive",
+  "block.tntexpanded.shrapnel_tnt_block": "Shrapnel Explosive",
+  "block.tntexpanded.stun_tnt_block": "Stun Explosive",
+  "block.tntexpanded.chemical_tnt_block": "Chemical Explosive",
+  "effect.tntexpanded.dazzle_effect": "Dazzle Effect"
+}

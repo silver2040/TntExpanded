@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "down": "tntexpanded:block/base1_tnt_block_bottom",
+    "up": "tntexpanded:block/stun_tnt_block_top",
+    "north": "tntexpanded:block/stun_tnt_block_front",
+    "south": "tntexpanded:block/stun_tnt_block_sides",
+    "west": "tntexpanded:block/stun_tnt_block_sides",
+    "east": "tntexpanded:block/stun_tnt_block_sides",
+    "all": "tntexpanded:block/stun_tnt_block_sides"
+  }
+}
