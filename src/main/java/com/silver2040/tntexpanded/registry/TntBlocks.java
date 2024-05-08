@@ -23,6 +23,15 @@ public class TntBlocks {
     public static final RegistryObject<Block> SHRAPNEL_TNT = BLOCKS.register("shrapnel_tnt_block", ShrapnelTnt::new);
     public static final RegistryObject<Block> STUN_TNT = BLOCKS.register("stun_tnt_block", StunTnt::new);
     public static final RegistryObject<Block> CHEMICAL_TNT = BLOCKS.register("chemical_tnt_block", ChemicalTnt::new);
+    public static final RegistryObject<Block> BREACHING_TNT = BLOCKS.register("breaching_tnt_block", BreachingTnt::new);
+    public static final RegistryObject<Block> NETHER_TNT = BLOCKS.register("nether_tnt_block", NetherTnt::new);
+    public static final RegistryObject<Block> CLUSTER_TNT = BLOCKS.register("cluster_tnt_block", ClusterTnt::new);
+    public static final RegistryObject<Block> BOMBLET_TNT = BLOCKS.register("cluster_bomblet", BombletTnt::new);
+    public static final RegistryObject<Block> CONCUSSIVE_TNT = BLOCKS.register("concussive_tnt_block", ConcussiveTnt::new);
+
+    public static final RegistryObject<Block> VEGETATION_TNT = BLOCKS.register("vegetation_tnt_block", VegetationTnt::new);
+    public static final RegistryObject<Block> THERMOBARIC_TNT = BLOCKS.register("thermobaric_tnt_block", ThermobaricTnt::new);
+    public static final RegistryObject<Block> REVERSE_TNT = BLOCKS.register("reverse_tnt_block", ReverseTnt::new);
 
 
 
@@ -38,7 +47,15 @@ public class TntBlocks {
     public static final RegistryObject<BlockItem> SHRAPNEL_TNT_ITEM = ITEMS.register("shrapnel_tnt_block", () -> new BlockItem(SHRAPNEL_TNT.get(), new Item.Properties()));
     public static final RegistryObject<BlockItem> STUN_TNT_ITEM = ITEMS.register("stun_tnt_block", () -> new BlockItem(STUN_TNT.get(), new Item.Properties()));
     public static final RegistryObject<BlockItem> CHEMICAL_TNT_ITEM = ITEMS.register("chemical_tnt_block", () -> new BlockItem(CHEMICAL_TNT.get(), new Item.Properties()));
+    public static final RegistryObject<BlockItem> BREACHING_TNT_ITEM = ITEMS.register("breaching_tnt_block", () -> new BlockItem(BREACHING_TNT.get(), new Item.Properties()));
+    public static final RegistryObject<BlockItem> NETHER_TNT_ITEM = ITEMS.register("nether_tnt_block", () -> new BlockItem(NETHER_TNT.get(), new Item.Properties()));
+    public static final RegistryObject<BlockItem> CLUSTER_TNT_ITEM = ITEMS.register("cluster_tnt_block", () -> new BlockItem(CLUSTER_TNT.get(), new Item.Properties()));
+    public static final RegistryObject<BlockItem> BOMBLET_TNT_ITEM = ITEMS.register("cluster_bomblet", () -> new BlockItem(BOMBLET_TNT.get(), new Item.Properties()));
 
+    public static final RegistryObject<BlockItem> CONCUSSIVE_TNT_ITEM = ITEMS.register("concussive_tnt_block", () -> new BlockItem(CONCUSSIVE_TNT.get(), new Item.Properties()));
+    public static final RegistryObject<BlockItem> VEGETATION_TNT_ITEM = ITEMS.register("vegetation_tnt_block", () -> new BlockItem(VEGETATION_TNT.get(), new Item.Properties()));
+    public static final RegistryObject<BlockItem> THERMOBARIC_TNT_ITEM = ITEMS.register("thermobaric_tnt_block", () -> new BlockItem(THERMOBARIC_TNT.get(), new Item.Properties()));
+    public static final RegistryObject<BlockItem> REVERSE_TNT_ITEM = ITEMS.register("reverse_tnt_block", () -> new BlockItem(REVERSE_TNT.get(), new Item.Properties()));
 
     public static void register(IEventBus bus){
         BLOCKS.register(bus);

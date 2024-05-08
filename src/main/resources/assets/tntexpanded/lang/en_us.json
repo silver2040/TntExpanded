@@ -5,5 +5,15 @@
   "block.tntexpanded.shrapnel_tnt_block": "Shrapnel Explosive",
   "block.tntexpanded.stun_tnt_block": "Stun Explosive",
   "block.tntexpanded.chemical_tnt_block": "Chemical Explosive",
-  "effect.tntexpanded.dazzle_effect": "Dazzle Effect"
+  "effect.tntexpanded.dazzle_effect": "Dazzle Effect",
+  "block.tntexpanded.breaching_tnt_block": "Breaching Explosive",
+  "block.tntexpanded.nether_tnt_block": "Nether Explosive",
+  "block.tntexpanded.cluster_tnt_block": "Cluster Explosive",
+  "block.tntexpanded.cluster_bomblet": "Bomblet",
+  "block.tntexpanded.concussive_tnt_block": "Concussive Explosive",
+  "block.tntexpanded.vegetation_tnt_block": "Vegetation Explosive",
+  "block.tntexpanded.thermobaric_tnt_block": "Thermobaric Explosive",
+  "block.tntexpanded.reverse_tnt_block": "Reverse Explosive"
+
+
 }

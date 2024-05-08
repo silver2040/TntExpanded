@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "down": "tntexpanded:block/breaching_bottom",
+    "up": "tntexpanded:block/breaching_top",
+    "north": "tntexpanded:block/breaching_front",
+    "south": "tntexpanded:block/breaching_back",
+    "west": "tntexpanded:block/breaching_side",
+    "east": "tntexpanded:block/breaching_left",
+    "all": "tntexpanded:block/breaching_side"
+  }
+}

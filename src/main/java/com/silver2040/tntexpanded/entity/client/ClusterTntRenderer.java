@@ -3,7 +3,7 @@ package com.silver2040.tntexpanded.entity.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.silver2040.tntexpanded.TntExpanded;
-import com.silver2040.tntexpanded.entity.blocks.ShrapnelTntEntity;
+import com.silver2040.tntexpanded.entity.blocks.ClusterTntEntity;
 import com.silver2040.tntexpanded.registry.TntBlocks;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -14,17 +14,17 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
-public class ShrapnelTntRenderer extends EntityRenderer<ShrapnelTntEntity> {
+public class ClusterTntRenderer extends EntityRenderer<ClusterTntEntity> {
 
     private final BlockRenderDispatcher blockRenderer;
 
-    public ShrapnelTntRenderer(EntityRendererProvider.Context p_174426_) {
+    public ClusterTntRenderer(EntityRendererProvider.Context p_174426_) {
         super(p_174426_);
         this.shadowRadius = 0.5F;
         this.blockRenderer = p_174426_.getBlockRenderDispatcher();
     }
     @Override
-    public void render(ShrapnelTntEntity blockEntity, float partialTicks, float combinedOverlay, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+    public void render(ClusterTntEntity blockEntity, float partialTicks, float combinedOverlay, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
         poseStack.pushPose();
         poseStack.translate(0.0F, 0.5F, 0.0F);
         int $$6 = blockEntity.getFuse();
@@ -40,14 +40,14 @@ public class ShrapnelTntRenderer extends EntityRenderer<ShrapnelTntEntity> {
         poseStack.mulPose(Axis.YP.rotationDegrees(-90.0F));
         poseStack.translate(-0.5F, -0.5F, 0.5F);
         poseStack.mulPose(Axis.YP.rotationDegrees(90.0F));
-        TntMinecartRenderer.renderWhiteSolidBlock(this.blockRenderer, TntBlocks.SHRAPNEL_TNT.get().defaultBlockState(), poseStack, buffer, packedLight, $$6 / 5 % 2 == 0);
+        TntMinecartRenderer.renderWhiteSolidBlock(this.blockRenderer, TntBlocks.CLUSTER_TNT.get().defaultBlockState(), poseStack, buffer, packedLight, $$6 / 5 % 2 == 0);
         poseStack.popPose();
         super.render(blockEntity, partialTicks, combinedOverlay, poseStack, buffer, packedLight);
+
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull ShrapnelTntEntity shrapnelTntEntity) {
-        //return new ResourceLocation(TntExpanded.MODID, "textures/entity/shrapnel_tnt_block_front.png");
-        return null;
+    public @NotNull ResourceLocation getTextureLocation(@NotNull ClusterTntEntity clusterTntEntity) {
+        return new ResourceLocation(TntExpanded.MODID, "textures/entity/cluster_side.png");
     }
 }

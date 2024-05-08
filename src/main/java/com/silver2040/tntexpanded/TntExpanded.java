@@ -7,6 +7,8 @@ import com.silver2040.tntexpanded.entity.item.LifespanArrowEntity;
 import com.silver2040.tntexpanded.registry.TntBlocks;
 import com.silver2040.tntexpanded.registry.TntEntities;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ArrowRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderers;
@@ -78,6 +80,12 @@ public class TntExpanded
                 output.accept(TntBlocks.SHRAPNEL_TNT.get());
                 output.accept(TntBlocks.STUN_TNT.get());
                 output.accept(TntBlocks.CHEMICAL_TNT.get());
+                output.accept(TntBlocks.BREACHING_TNT.get());
+                output.accept(TntBlocks.NETHER_TNT.get());
+                output.accept(TntBlocks.CLUSTER_TNT.get());
+                output.accept(TntBlocks.CONCUSSIVE_TNT.get());
+                output.accept(TntBlocks.VEGETATION_TNT.get());
+                output.accept(TntBlocks.THERMOBARIC_TNT.get());
 
                 // Add the example item to the tab. For your own tabs, this method is preferred over the event
             }).build());
@@ -151,6 +159,16 @@ public class TntExpanded
             EntityRenderers.register(TntEntities.LIFESPAN_ARROW_ENTITY.get(), LifeSpanArrowRenderer::new);
             EntityRenderers.register(TntEntities.PRIMED_STUN_TNT.get(), StunTntRenderer::new);
             EntityRenderers.register(TntEntities.PRIMED_CHEMICAL_TNT.get(), ChemicalTntRenderer::new);
+            EntityRenderers.register(TntEntities.PRIMED_BREACHING_TNT.get(), BreachingTntRenderer::new);
+            EntityRenderers.register(TntEntities.PRIMED_NETHER_TNT.get(), NetherTntRenderer::new);
+            EntityRenderers.register(TntEntities.PRIMED_CLUSTER_TNT.get(), ClusterTntRenderer::new);
+            EntityRenderers.register(TntEntities.PRIMED_BOMBLET_TNT.get(), BombletTntRenderer::new);
+            EntityRenderers.register(TntEntities.PRIMED_CONCUSSIVE_TNT.get(), ConcussiveTntRenderer::new);
+            EntityRenderers.register(TntEntities.PRIMED_VEGETATION_TNT.get(), VegetationTntRenderer::new);
+            EntityRenderers.register(TntEntities.PRIMED_THERMOBARIC_TNT.get(), ThermobaricTntRenderer::new);
+            EntityRenderers.register(TntEntities.PRIMED_REVERSE_TNT.get(), ReverseTntRenderer::new);
+
+
             //EntityRenderers.register(EntityType.ARROW, LifeSpanArrowRenderer::new);
 
 

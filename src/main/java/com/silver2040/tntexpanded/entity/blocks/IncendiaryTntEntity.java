@@ -134,7 +134,7 @@ public class IncendiaryTntEntity extends Entity implements TraceableEntity {
     }
 
     protected void explode() {
-        this.level().explode(this, this.getX(), this.getY(0.0625), this.getZ(), 3.0F, Level.ExplosionInteraction.BLOCK);
+        this.level().explode(this, this.getX(), this.getY(0.0625), this.getZ(), 3.0F,true, Level.ExplosionInteraction.BLOCK);
 
     }
     public void setFuse(int p_32086_) {

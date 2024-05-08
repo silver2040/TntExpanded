@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "tntexpanded:block/cluster_bomblet",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "tntexpanded:block/cluster_bomblet"
+    },
+    "facing=south": {
+      "model": "tntexpanded:block/cluster_bomblet",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "tntexpanded:block/cluster_bomblet",
+      "y": 270
+    }
+  }
+}

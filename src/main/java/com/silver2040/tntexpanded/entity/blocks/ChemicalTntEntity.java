@@ -101,9 +101,9 @@ public class ChemicalTntEntity extends Entity implements TraceableEntity {
                         for (Entity entity : entitiesWithinRadius) {
                             if (entity instanceof LivingEntity) {
                                 LivingEntity livingEntity = (LivingEntity) entity;
-                                livingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, duration));
-                                livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, duration));
-                                livingEntity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, duration));
+                                livingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, duration,1 ));
+                                livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, duration,1));
+                                livingEntity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, duration,1));
                                 livingEntity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, duration));
                                 livingEntity.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, duration));
                                 livingEntity.addEffect(new MobEffectInstance(MobEffects.CONFUSION, duration));

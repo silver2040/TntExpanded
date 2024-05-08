@@ -1,39 +1,48 @@
 package com.silver2040.tntexpanded.entity.blocks;
 
+import com.silver2040.tntexpanded.block.BombletTnt;
 import com.silver2040.tntexpanded.registry.TntEntities;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.TntBlock;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public class CompactTntEntity extends Entity implements TraceableEntity {
+import java.util.Random;
+
+import static com.silver2040.tntexpanded.registry.TntEntities.PRIMED_SHRAPNEL_TNT;
+
+public class ClusterTntEntity extends Entity implements TraceableEntity {
 
     private static final EntityDataAccessor<Integer> DATA_FUSE_ID;
+    public static int numberOfTnt = 40;
+    static Random r = new Random();
     @javax.annotation.Nullable
     private LivingEntity owner;
 
-    public CompactTntEntity(Level p_32079_, double p_32080_, double p_32081_, double p_32082_, @Nullable LivingEntity p_32083_) {
-        this(TntEntities.PRIMED_COMPACT_TNT.get(), p_32079_);
+    public ClusterTntEntity(Level p_32079_, double p_32080_, double p_32081_, double p_32082_, @Nullable LivingEntity p_32083_) {
+        this(TntEntities.PRIMED_CLUSTER_TNT.get(), p_32079_);
         this.setPos(p_32080_, p_32081_, p_32082_);
         double $$5 = p_32079_.random.nextDouble() * 6.2831854820251465;
-        this.setDeltaMovement(-Math.sin($$5) * 0.02, 0.20000000298023224, -Math.cos($$5) * 0.02);
+        //this.setDeltaMovement(-Math.sin($$5) * 0.02, 0.20000000298023224, -Math.cos($$5) * 0.02);
         this.xo = p_32080_;
         this.yo = p_32081_;
         this.zo = p_32082_;
         this.owner = p_32083_;
-        this.setFuse(20);
+        setFuse(80);
     }
 
-    public CompactTntEntity(EntityType<CompactTntEntity> TntEntityEntityType, Level level) {
-        super(TntEntityEntityType, level);
+    public ClusterTntEntity(EntityType<ClusterTntEntity> clusterTntEntityEntityType, Level level) {
+        super(clusterTntEntityEntityType, level);
         this.blocksBuilding = true;
     }
-    protected Entity.MovementEmission getMovementEmission() {
+    protected MovementEmission getMovementEmission() {
         return MovementEmission.NONE;
     }
     public boolean isPickable() {
@@ -46,9 +55,9 @@ public class CompactTntEntity extends Entity implements TraceableEntity {
         }
 
         this.move(MoverType.SELF, this.getDeltaMovement());
-        this.setDeltaMovement(this.getDeltaMovement().scale(0.98));
+        //this.setDeltaMovement(this.getDeltaMovement().scale(0.98));
         if (this.onGround()) {
-            this.setDeltaMovement(this.getDeltaMovement().multiply(0.7, -0.5, 0.7));
+            //this.setDeltaMovement(this.getDeltaMovement().multiply(0.7, -0.5, 0.7));
         }
 
         int $$0 = this.getFuse() - 1;
@@ -68,8 +77,23 @@ public class CompactTntEntity extends Entity implements TraceableEntity {
     }
 
     protected void explode() {
-        this.level().explode(this, this.getX(), this.getY(0.0625), this.getZ(), 5.0F, Level.ExplosionInteraction.BLOCK);
+        launchTnt(level(), new BlockPos((int) this.getX(), (int) this.getY(), (int) this.getZ()));
+        this.level().explode(this, this.getX(), this.getY(0.0625), this.getZ(), 4.0F, Level.ExplosionInteraction.BLOCK);
 
+    }
+
+    public static void launchTnt(Level world, BlockPos launchPoint) {
+        for (int i = 0; i < numberOfTnt; i++) {
+            double yaw = r.nextDouble(1) * 360.0;
+            double pitch = r.nextDouble(1) * 180.0 - 90.0;
+            Vec3 direction = Vec3.directionFromRotation((float) pitch, (float) yaw);
+            spawnTnt(world, launchPoint, direction);
+        }
+    }
+    private static void spawnTnt(Level world, BlockPos pos, Vec3 direction) {
+        BombletTntEntity tnt = new BombletTntEntity(world, pos.getX(), pos.getY()+1, pos.getZ(), null);
+        tnt.setDeltaMovement(direction.scale(.7));
+        world.addFreshEntity(tnt);
     }
     public void setFuse(int p_32086_) {
         this.entityData.set(DATA_FUSE_ID, p_32086_);
@@ -93,7 +117,7 @@ public class CompactTntEntity extends Entity implements TraceableEntity {
 
 
     static{
-        DATA_FUSE_ID = SynchedEntityData.defineId(CompactTntEntity.class, EntityDataSerializers.INT);
+        DATA_FUSE_ID = SynchedEntityData.defineId(ClusterTntEntity.class, EntityDataSerializers.INT);
     }
 
     @Nullable

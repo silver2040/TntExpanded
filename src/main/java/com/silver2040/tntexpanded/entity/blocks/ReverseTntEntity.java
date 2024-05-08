@@ -1,24 +1,27 @@
 package com.silver2040.tntexpanded.entity.blocks;
 
 import com.silver2040.tntexpanded.registry.TntEntities;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.TntBlock;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import org.jetbrains.annotations.Nullable;
 
-public class CompactTntEntity extends Entity implements TraceableEntity {
+public class ReverseTntEntity extends Entity implements TraceableEntity {
 
     private static final EntityDataAccessor<Integer> DATA_FUSE_ID;
     @javax.annotation.Nullable
     private LivingEntity owner;
 
-    public CompactTntEntity(Level p_32079_, double p_32080_, double p_32081_, double p_32082_, @Nullable LivingEntity p_32083_) {
-        this(TntEntities.PRIMED_COMPACT_TNT.get(), p_32079_);
+    public ReverseTntEntity(Level p_32079_, double p_32080_, double p_32081_, double p_32082_, @Nullable LivingEntity p_32083_) {
+        this(TntEntities.PRIMED_REVERSE_TNT.get(), p_32079_);
         this.setPos(p_32080_, p_32081_, p_32082_);
         double $$5 = p_32079_.random.nextDouble() * 6.2831854820251465;
         this.setDeltaMovement(-Math.sin($$5) * 0.02, 0.20000000298023224, -Math.cos($$5) * 0.02);
@@ -29,11 +32,11 @@ public class CompactTntEntity extends Entity implements TraceableEntity {
         this.setFuse(20);
     }
 
-    public CompactTntEntity(EntityType<CompactTntEntity> TntEntityEntityType, Level level) {
+    public ReverseTntEntity(EntityType<ReverseTntEntity> TntEntityEntityType, Level level) {
         super(TntEntityEntityType, level);
         this.blocksBuilding = true;
     }
-    protected Entity.MovementEmission getMovementEmission() {
+    protected MovementEmission getMovementEmission() {
         return MovementEmission.NONE;
     }
     public boolean isPickable() {
@@ -66,6 +69,16 @@ public class CompactTntEntity extends Entity implements TraceableEntity {
         }
 
     }
+    public static void regenerateChunk(ServerLevel serverLevel, BlockPos pos) {
+
+        int chunkX = pos.getX() >> 4;
+        int chunkZ = pos.getZ() >> 4;
+        ChunkGenerator generator = serverLevel.getChunkSource().getGenerator();
+
+  //      ChunkAccess regeneratedChunk = generator.recreateChunk(chunkX, chunkZ);
+
+//        serverLevel.getChunkSource().getChunk(chunkX, chunkZ, true).replaceWith(regeneratedChunk);
+    }
 
     protected void explode() {
         this.level().explode(this, this.getX(), this.getY(0.0625), this.getZ(), 5.0F, Level.ExplosionInteraction.BLOCK);
@@ -93,7 +106,7 @@ public class CompactTntEntity extends Entity implements TraceableEntity {
 
 
     static{
-        DATA_FUSE_ID = SynchedEntityData.defineId(CompactTntEntity.class, EntityDataSerializers.INT);
+        DATA_FUSE_ID = SynchedEntityData.defineId(ReverseTntEntity.class, EntityDataSerializers.INT);
     }
 
     @Nullable

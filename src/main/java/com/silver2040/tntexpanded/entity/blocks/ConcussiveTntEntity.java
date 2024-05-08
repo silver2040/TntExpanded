@@ -2,23 +2,25 @@ package com.silver2040.tntexpanded.entity.blocks;
 
 
 import com.silver2040.tntexpanded.registry.TntEntities;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.Input;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.TntBlock;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class StunTntEntity extends Entity implements TraceableEntity {
+public class ConcussiveTntEntity extends Entity implements TraceableEntity {
 
     private static final EntityDataAccessor<Integer> DATA_FUSE_ID;
     @javax.annotation.Nullable
@@ -27,10 +29,11 @@ public class StunTntEntity extends Entity implements TraceableEntity {
     private boolean wasExploded;
     private Level level;
     private int effectInterval = 20;
-    private int duration = 20;
+    private int duration = 30;
+    private int inversionTime = 400;
 
-    public StunTntEntity(Level p_32079_, double p_32080_, double p_32081_, double p_32082_, @Nullable LivingEntity p_32083_) {
-        this(TntEntities.PRIMED_STUN_TNT.get(), p_32079_);
+    public ConcussiveTntEntity(Level p_32079_, double p_32080_, double p_32081_, double p_32082_, @Nullable LivingEntity p_32083_) {
+        this(TntEntities.PRIMED_CONCUSSIVE_TNT.get(), p_32079_);
         this.setPos(p_32080_, p_32081_, p_32082_);
         double $$5 = p_32079_.random.nextDouble() * 6.2831854820251465;
         this.setDeltaMovement(-Math.sin($$5) * 0.02, 0.20000000298023224, -Math.cos($$5) * 0.02);
@@ -42,11 +45,11 @@ public class StunTntEntity extends Entity implements TraceableEntity {
         this.effectDurationTicks = 100;
     }
 
-    public StunTntEntity(EntityType<StunTntEntity> stunTntEntityEntityType, Level level) {
-        super(stunTntEntityEntityType, level);
+    public ConcussiveTntEntity(EntityType<ConcussiveTntEntity> concussiveTntEntityEntityType, Level level) {
+        super(concussiveTntEntityEntityType, level);
         this.blocksBuilding = true;
     }
-    protected Entity.MovementEmission getMovementEmission() {
+    protected MovementEmission getMovementEmission() {
         return MovementEmission.NONE;
     }
     public boolean isPickable() {
@@ -79,20 +82,41 @@ public class StunTntEntity extends Entity implements TraceableEntity {
         }
 
 
+
+        int maxRad = 7;
+        for (double radius = 1; radius < maxRad; radius++) {
+            AABB effectArea =
+                    new AABB(this.getX() - radius, this.getY() - radius, this.getZ() - radius,
+                            this.getX() + radius, this.getY() + radius, this.getZ() + radius);
+            double finalRadius = radius;
+            int timeLeft = duration;
+            inversionTime--;
+            while (timeLeft > 0) {
+                List<Entity> entitiesWithinRadius = level().getEntities(null, effectArea);
+                for (Entity entity : entitiesWithinRadius) {
+                    if (entity instanceof Player && level().isClientSide()) {
+                        Player livingEntity = (Player) entity;
+                        invertMovementControls(livingEntity);
+                    }
+                }
+
+                timeLeft -= effectInterval;
+            }
+
+
+        }
+
+
     }
 
-    private void stun(){
-        if (wasExploded) {
-            if (effectDurationTicks > 0) {
-
+    private void concuss(){
+        if (wasExploded ) {
                 int maxRad = 7;
                 for (double radius = 1; radius < maxRad; radius++) {
                     AABB effectArea =
                             new AABB(this.getX() - radius, this.getY() - radius, this.getZ() - radius,
                                     this.getX() + radius, this.getY() + radius, this.getZ() + radius);
-
                     double finalRadius = radius;
-                    new Thread(() -> {
                         int timeLeft = duration;
                         while (timeLeft > 0) {
                             List<Entity> entitiesWithinRadius = level().getEntities(null, effectArea);
@@ -103,26 +127,33 @@ public class StunTntEntity extends Entity implements TraceableEntity {
                                 }
                             }
 
-
-                            try {
-                                Thread.sleep(effectInterval * 50);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
                             timeLeft -= effectInterval;
                         }
-                    }).start();
+
 
                     effectDurationTicks--;
                 }
             }
-        }
+
     }
+
     protected void explode() {
-        this.level().explode(this, this.getX(), this.getY(0.0625), this.getZ(), 0.0001F, Level.ExplosionInteraction.BLOCK);
+        this.level().explode(this, this.getX(), this.getY(0.0625), this.getZ(), 4.0F, Level.ExplosionInteraction.BLOCK);
         wasExploded = true;
-        stun();
+        concuss();
+    }
+    private static void invertMovementControls(Player player) {
+        if (player instanceof LocalPlayer) {
+            Input input = ((LocalPlayer) player).input;
+
+            boolean forwardMovement = input.up;
+            input.up = input.down;
+            input.down = forwardMovement;
+
+            boolean leftMovement = input.left;
+            input.left = input.right;
+            input.right = leftMovement;
+        }
     }
     public void setFuse(int p_32086_) {
         this.entityData.set(DATA_FUSE_ID, p_32086_);
@@ -148,7 +179,7 @@ public class StunTntEntity extends Entity implements TraceableEntity {
 
 
     static{
-        DATA_FUSE_ID = SynchedEntityData.defineId(StunTntEntity.class, EntityDataSerializers.INT);
+        DATA_FUSE_ID = SynchedEntityData.defineId(ConcussiveTntEntity.class, EntityDataSerializers.INT);
     }
 
     @Nullable
@@ -156,4 +187,5 @@ public class StunTntEntity extends Entity implements TraceableEntity {
     public Entity getOwner() {
         return null;
     }
+
 }

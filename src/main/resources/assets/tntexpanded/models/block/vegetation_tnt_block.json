@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "down": "tntexpanded:block/base2_bottom",
+    "up": "tntexpanded:block/vegetation_top",
+    "north": "tntexpanded:block/vegetation_side",
+    "south": "tntexpanded:block/vegetation_side",
+    "west": "tntexpanded:block/vegetation_side",
+    "east": "tntexpanded:block/vegetation_side",
+    "all": "tntexpanded:block/vegetation_side"
+  }
+}

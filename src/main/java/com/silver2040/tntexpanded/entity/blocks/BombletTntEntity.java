@@ -7,18 +7,20 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.TntBlock;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public class CompactTntEntity extends Entity implements TraceableEntity {
+public class BombletTntEntity extends Entity implements TraceableEntity {
 
     private static final EntityDataAccessor<Integer> DATA_FUSE_ID;
     @javax.annotation.Nullable
     private LivingEntity owner;
 
-    public CompactTntEntity(Level p_32079_, double p_32080_, double p_32081_, double p_32082_, @Nullable LivingEntity p_32083_) {
-        this(TntEntities.PRIMED_COMPACT_TNT.get(), p_32079_);
+    public BombletTntEntity(Level p_32079_, double p_32080_, double p_32081_, double p_32082_, @Nullable LivingEntity p_32083_) {
+        this(TntEntities.PRIMED_BOMBLET_TNT.get(), p_32079_);
         this.setPos(p_32080_, p_32081_, p_32082_);
         double $$5 = p_32079_.random.nextDouble() * 6.2831854820251465;
         this.setDeltaMovement(-Math.sin($$5) * 0.02, 0.20000000298023224, -Math.cos($$5) * 0.02);
@@ -26,14 +28,14 @@ public class CompactTntEntity extends Entity implements TraceableEntity {
         this.yo = p_32081_;
         this.zo = p_32082_;
         this.owner = p_32083_;
-        this.setFuse(20);
+        setFuse(2000);
     }
 
-    public CompactTntEntity(EntityType<CompactTntEntity> TntEntityEntityType, Level level) {
-        super(TntEntityEntityType, level);
+    public BombletTntEntity(EntityType<BombletTntEntity> bombletTntEntityEntityType, Level level) {
+        super(bombletTntEntityEntityType, level);
         this.blocksBuilding = true;
     }
-    protected Entity.MovementEmission getMovementEmission() {
+    protected MovementEmission getMovementEmission() {
         return MovementEmission.NONE;
     }
     public boolean isPickable() {
@@ -41,6 +43,11 @@ public class CompactTntEntity extends Entity implements TraceableEntity {
     }
 
     public void tick() {
+        Vec3 velocity = this.getDeltaMovement();
+        Vec3 currentPosition = this.position();
+        Vec3 predictedPosition = currentPosition.add(velocity);
+        HitResult hitResult = level().clip(new ClipContext(currentPosition, predictedPosition, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+
         if (!this.isNoGravity()) {
             this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.04, 0.0));
         }
@@ -53,7 +60,7 @@ public class CompactTntEntity extends Entity implements TraceableEntity {
 
         int $$0 = this.getFuse() - 1;
         this.setFuse($$0);
-        if ($$0 <= 0) {
+        if ($$0 <= 0 || hitResult.getType() != HitResult.Type.MISS) {
             this.discard();
             if (!this.level().isClientSide) {
                 this.explode();
@@ -93,7 +100,7 @@ public class CompactTntEntity extends Entity implements TraceableEntity {
 
 
     static{
-        DATA_FUSE_ID = SynchedEntityData.defineId(CompactTntEntity.class, EntityDataSerializers.INT);
+        DATA_FUSE_ID = SynchedEntityData.defineId(BombletTntEntity.class, EntityDataSerializers.INT);
     }
 
     @Nullable

@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "down": "tntexpanded:block/base2_bottom",
+    "up": "tntexpanded:block/nether_top2",
+    "north": "tntexpanded:block/nether_side2",
+    "south": "tntexpanded:block/nether_side2",
+    "west": "tntexpanded:block/nether_side2",
+    "east": "tntexpanded:block/nether_side2",
+    "all": "tntexpanded:block/nether_side2"
+  }
+}

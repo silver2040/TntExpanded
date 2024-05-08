@@ -2,36 +2,29 @@ package com.silver2040.tntexpanded.entity.blocks;
 
 import com.mojang.logging.LogUtils;
 import com.silver2040.tntexpanded.registry.TntEntities;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.SmokeParticle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+public class VegetationTntEntity extends Entity implements TraceableEntity {
 
-public class ToxicTntEntity extends Entity implements TraceableEntity {
     private static final EntityDataAccessor<Integer> DATA_FUSE_ID;
     @javax.annotation.Nullable
     private LivingEntity owner;
-    private int effectDurationTicks;
     private boolean wasExploded;
-    private Level level;
-    private int effectInterval = 20;
-    private int duration = 200;
-    public ToxicTntEntity(Level p_32079_, double p_32080_, double p_32081_, double p_32082_, @Nullable LivingEntity p_32083_) {
-        this(TntEntities.PRIMED_TOXIC_TNT.get(), p_32079_);
+
+
+    public VegetationTntEntity(Level p_32079_, double p_32080_, double p_32081_, double p_32082_, @Nullable LivingEntity p_32083_) {
+        this(TntEntities.PRIMED_VEGETATION_TNT.get(), p_32079_);
         this.setPos(p_32080_, p_32081_, p_32082_);
         double $$5 = p_32079_.random.nextDouble() * 6.2831854820251465;
         this.setDeltaMovement(-Math.sin($$5) * 0.02, 0.20000000298023224, -Math.cos($$5) * 0.02);
@@ -39,15 +32,14 @@ public class ToxicTntEntity extends Entity implements TraceableEntity {
         this.yo = p_32081_;
         this.zo = p_32082_;
         this.owner = p_32083_;
-        setFuse(80);
-        this.effectDurationTicks = 200;
+        setFuse(20);
     }
-    public ToxicTntEntity(EntityType<ToxicTntEntity> toxicTntEntityEntityType, Level level) {
-        super(toxicTntEntityEntityType, level);
+
+    public VegetationTntEntity(EntityType<VegetationTntEntity> TntEntityEntityType, Level level) {
+        super(TntEntityEntityType, level);
         this.blocksBuilding = true;
-        this.level = level;
     }
-    protected Entity.MovementEmission getMovementEmission() {
+    protected MovementEmission getMovementEmission() {
         return MovementEmission.NONE;
     }
     public boolean isPickable() {
@@ -71,59 +63,48 @@ public class ToxicTntEntity extends Entity implements TraceableEntity {
             this.discard();
             if (!this.level().isClientSide) {
                 this.explode();
-                this.wasExploded = true;
             }
         } else {
             this.updateInWaterStateAndDoFluidPushing();
             if (this.level().isClientSide) {
                 this.level().addParticle(ParticleTypes.SMOKE, this.getX(), this.getY() + 0.5, this.getZ(), 0.0, 0.0, 0.0);
-
-            }
-        }
-
-        if (wasExploded){
-            double radius = 5.0;
-
-
-            if (effectDurationTicks > 0) {
-
-                AABB effectArea =
-                        new AABB(this.getX() - radius, this.getY() - radius, this.getZ() - radius,
-                                this.getX() + radius, this.getY() + radius, this.getZ() + radius);
-
-                new Thread(() -> {
-                    int timeLeft = duration;
-                    while (timeLeft > 0) {
-                        List<Entity> entitiesWithinRadius = level.getEntities(null, effectArea);
-                        for (Entity entity : entitiesWithinRadius) {
-                            if (entity instanceof LivingEntity) {
-                                LivingEntity livingEntity = (LivingEntity) entity;
-                                livingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, duration));
-                                livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, duration));
-                                livingEntity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, duration));
-                            }
-                        }
-
-
-                        try {
-                            Thread.sleep(effectInterval * 50);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                        timeLeft -= effectInterval;
-                    }
-                }).start();
-
-                effectDurationTicks--;
             }
         }
 
     }
 
     protected void explode() {
-        this.level().explode(this, this.getX(), this.getY(0.0625), this.getZ(), 0.001F, Level.ExplosionInteraction.BLOCK);
+        this.level().explode(this, this.getX(), this.getY(0.0625), this.getZ(), 0.00001F, Level.ExplosionInteraction.BLOCK);
+        wasExploded = true;
+        BlockPos center = this.blockPosition();
+        int radius = 6;
+        for (BlockPos pos : BlockPos.betweenClosed(center.offset(-radius, -radius, -radius), center.offset(radius, radius, radius))) {
+            if (level().isLoaded(pos)) {
+                BlockState state = level().getBlockState(pos);
+                if (state.getBlock() instanceof GrassBlock || state.getBlock() instanceof CropBlock) {
+                    state.randomTick((ServerLevel) this.level(), pos, level().random);
+                    ((BonemealableBlock) state.getBlock()).performBonemeal((ServerLevel) level(), level().random, pos, state);
+                    if (level().random.nextFloat() < 0.25f){
+                        if (level().getBlockState(pos.above()).canBeReplaced()) {
+                            level().setBlock(pos.above(), Blocks.OAK_SAPLING.defaultBlockState(), 3);
+                        }
+                    }
+                }
 
+                if (state.getBlock() instanceof SaplingBlock || state.getBlock() instanceof CropBlock) {
+                    for (int i = 0; i < 200; i++) {
+                        if (state.getBlock() instanceof SaplingBlock)
+                            ((SaplingBlock) state.getBlock()).performBonemeal((ServerLevel) level(), level().random, pos, state);
+                        if (state.getBlock() instanceof CropBlock)
+                            ((CropBlock) state.getBlock()).performBonemeal((ServerLevel) level(), level().random, pos, state);
+                    }
+                }
+
+                if (state.getBlock() == Blocks.FIRE) {
+                    level().removeBlock(pos, false);
+                }
+            }
+        }
     }
     public void setFuse(int p_32086_) {
         this.entityData.set(DATA_FUSE_ID, p_32086_);
@@ -145,8 +126,9 @@ public class ToxicTntEntity extends Entity implements TraceableEntity {
     protected void addAdditionalSaveData(CompoundTag compoundTag) {
     }
 
+
     static{
-        DATA_FUSE_ID = SynchedEntityData.defineId(ToxicTntEntity.class, EntityDataSerializers.INT);
+        DATA_FUSE_ID = SynchedEntityData.defineId(VegetationTntEntity.class, EntityDataSerializers.INT);
     }
 
     @Nullable
